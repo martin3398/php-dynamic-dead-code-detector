@@ -1,6 +1,16 @@
 # PHP Dynamic Dead Code Detector
 
+![Build](https://github.com/martin3398/php-dynamic-dead-code-detector/workflows/Check/badge.svg)
+
 This library can be used to dynamically (during runtime) detect dead classes in PHP applications.
+
+## Installation
+
+You can install the package via composer:
+
+```bash
+composer require martin3398/php-dynamic-dead-code-detector
+```
 
 ## Usage
 
