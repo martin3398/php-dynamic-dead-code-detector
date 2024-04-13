@@ -18,7 +18,7 @@ final class ShutdownFunctionService
 
     public function register(): void
     {
-        register_shutdown_function([self::class, 'shutdownHandler']);
+        register_shutdown_function([$this, 'shutdownHandler']);
     }
 
     public function shutdownHandler(): void
