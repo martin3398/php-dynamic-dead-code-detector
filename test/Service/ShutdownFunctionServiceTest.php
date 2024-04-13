@@ -8,8 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class ShutdownFunctionServiceTest extends TestCase
 {
-
-    function test_shutdownHandler_calls_save_on_outputHandler()
+    public function test_shutdownHandler_calls_save_on_outputHandler()
     {
         $outputHandler = $this->createMock(OutputHandlerInterface::class);
         $outputHandler->expects($this->once())
