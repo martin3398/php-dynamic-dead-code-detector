@@ -35,7 +35,7 @@
         ],
         "test": "phpunit -c phpunit.xml.dist",
         "psalm": "psalm",
-        "cs-fix": "php-cs-fixer fix -v src",
+        "cs-fix": "php-cs-fixer fix -v",
         "cs-check": "php-cs-fixer fix --dry-run -v"
     }
 }
