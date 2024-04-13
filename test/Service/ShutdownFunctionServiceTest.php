@@ -5,6 +5,9 @@ namespace DynamicDeadCodeDetector\Service;
 use DynamicDeadCodeDetector\OutputHandler\OutputHandlerInterface;
 use PHPUnit\Framework\TestCase;
 
+/**
+ * @author Martin Ziegler <mz33info@gmail.com>
+ */
 class ShutdownFunctionServiceTest extends TestCase
 {
     protected function setUp(): void
