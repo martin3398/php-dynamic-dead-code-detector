@@ -1,0 +1,41 @@
+{
+    "name": "martin3398/dynamic-dead-code-detector",
+    "description": "PHP Dynamic Dead Code Detector",
+    "type": "library",
+    "license": "GPLv3",
+    "autoload": {
+        "psr-4": {
+            "DynamicDeadCodeDetector\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Test\\": "test/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Martin Ziegler",
+            "email": "mz33info@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.1"
+    },
+    "require-dev": {
+        "vimeo/psalm": "^5.23",
+        "friendsofphp/php-cs-fixer": "^3.53",
+        "phpunit/phpunit": "^10.0"
+    },
+    "scripts": {
+        "check": [
+            "@test",
+            "@psalm",
+            "@cs-check"
+        ],
+        "test": "phpunit -c phpunit.xml.dist",
+        "psalm": "psalm",
+        "cs-fix": "php-cs-fixer fix -v src",
+        "cs-check": "php-cs-fixer fix --dry-run -v"
+    }
+}
