@@ -91,10 +91,7 @@ return (new PhpCsFixer\Config())
         'no_unused_imports' => true,
         'no_whitespace_before_comma_in_array' => true,
         'no_whitespace_in_blank_line' => true,
-        'not_operator_with_space' => true,
-        'not_operator_with_successor_space' => true,
         'nullable_type_declaration' => true,
-        'numeric_literal_separator' => true,
         'object_operator_without_whitespace' => true,
         'operator_linebreak' => true,
         'ordered_imports' => true,
@@ -120,7 +117,9 @@ return (new PhpCsFixer\Config())
         'trim_array_spaces' => true,
         'type_declaration_spaces' => true,
         'types_spaces' => true,
-        'unary_operator_spaces' => true,
+        'unary_operator_spaces' => [
+            'only_dec_inc' => true,
+        ],
         'visibility_required' => true,
         'whitespace_after_comma_in_array' => true,
     ])

@@ -25,7 +25,12 @@
     "require-dev": {
         "vimeo/psalm": "^5.23",
         "friendsofphp/php-cs-fixer": "^3.53",
-        "phpunit/phpunit": "^10.0"
+        "phpunit/phpunit": "^10.0",
+        "monolog/monolog": "^3.6",
+        "mikey179/vfsstream": "^1.6"
+    },
+    "suggest": {
+        "monolog/monolog": "Allow to log errors"
     },
     "scripts": {
         "check": [
