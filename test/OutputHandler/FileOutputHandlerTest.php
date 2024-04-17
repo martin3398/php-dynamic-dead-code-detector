@@ -18,6 +18,6 @@ class FileOutputHandlerTest extends TestCase
         $outputHandler = new FileOutputHandler($virtualFilePath);
         $outputHandler->save(['Foo', 'Bar']);
 
-        $this->assertEquals('["Foo","Bar"]', file_get_contents($virtualFilePath));
+        $this->assertEquals("Foo\nBar\n", file_get_contents($virtualFilePath));
     }
 }
