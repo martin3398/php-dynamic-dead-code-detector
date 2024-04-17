@@ -27,8 +27,18 @@ final class DeadClassesLocatorService
      */
     public function getDeadClasses(): array
     {
-        $allClasses = $this->getAllClasses();
         $usedClasses = $this->getUsedClasses();
+
+        return $this->getDeadClassesFromUsedClasses($usedClasses);
+    }
+
+    /**
+     * @param string[] $usedClasses
+     * @return string[]
+     */
+    public function getDeadClassesFromUsedClasses(array $usedClasses): array
+    {
+        $allClasses = $this->getAllClasses();
 
         return array_values(array_diff($allClasses, $usedClasses));
     }
