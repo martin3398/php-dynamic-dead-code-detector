@@ -34,30 +34,34 @@ final class FileOutputHandler implements OutputHandlerInterface
      */
     public function save(array $data): void
     {
-        $fileHandle = fopen($this->targetFile, 'c+');
+        $lockHandle = null;
 
         try {
-            $this->tryLockFile($fileHandle);
+            $lockHandle = $this->tryLockFile();
 
-            $existingData = $this->getJsonContents($fileHandle);
-            $updatedData = array_unique(array_merge($existingData, $data));
+            $existingData = $this->getFileContents();
+            $newData = array_values(array_diff($data, $existingData));
 
-            $this->writeJsonContents($fileHandle, $updatedData);
+            $this->writeFileContents($newData);
         } catch (FileOutputException $e) {
             $this->logger?->error("Could not save data to file: {$e->getMessage()}", ['exception' => $e]);
         } finally {
-            fclose($fileHandle);
+            if ($lockHandle !== null) {
+                $this->unlockLockFile($lockHandle);
+            }
         }
     }
 
     /**
-     * @param resource $fileHandle
      * @throws FileOutputException
+     * @return resource
      */
-    private function tryLockFile($fileHandle): void
+    private function tryLockFile()
     {
+        $lockFileHandle = fopen($this->getLockFile(), 'c+');
+
         $attempt = 0;
-        while (!flock($fileHandle, LOCK_EX | LOCK_NB)) {
+        while (!flock($lockFileHandle, LOCK_EX | LOCK_NB)) {
             $attempt++;
             if ($attempt >= self::ATTEMPTS) {
                 throw FileOutputException::fromCannotLockFile($this->targetFile, self::ATTEMPTS);
@@ -65,35 +69,44 @@ final class FileOutputHandler implements OutputHandlerInterface
 
             usleep(500000);
         }
+
+        return $lockFileHandle;
     }
 
     /**
      * @param resource $fileHandle
-     * @return string[]
-     * @throws FileOutputException
      */
-    private function getJsonContents($fileHandle): array
+    private function unlockLockFile($fileHandle): void
     {
-        $rawData = stream_get_contents($fileHandle);
-        /** @var string[]|null $decodedData */
-        $decodedData = json_decode($rawData, true);
-        if (!is_array($decodedData)) {
-            return [];
+        flock($fileHandle, LOCK_UN);
+        fclose($fileHandle);
+    }
+
+    /**
+     * @return string[]
+     */
+    private function getFileContents(): array
+    {
+        $contents = [];
+        if (file_exists($this->targetFile)) {
+            $contents = file($this->targetFile, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
         }
 
-        return $decodedData;
+        return $contents;
     }
 
     /**
-     * @param resource $fileHandle
      * @param string[] $data
      */
-    private function writeJsonContents($fileHandle, array $data): void
+    private function writeFileContents(array $data): void
     {
-        ftruncate($fileHandle, 0);
-        rewind($fileHandle);
-        fwrite($fileHandle, json_encode($data));
-        fflush($fileHandle);
-        flock($fileHandle, LOCK_UN);
+        if (!empty($data)) {
+            file_put_contents($this->targetFile, implode(PHP_EOL, $data) . PHP_EOL, FILE_APPEND);
+        }
+    }
+
+    private function getLockFile(): string
+    {
+        return $this->targetFile . '.lock';
     }
 }
