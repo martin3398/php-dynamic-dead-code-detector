@@ -27,4 +27,52 @@ class DeadClassesLocatorServiceTest extends TestCase
 
         $this->assertEquals([DeadClass::class], $deadClasses);
     }
+
+    public function test_getDeadClassesFromUsedClasses_emptyUsedClasses(): void
+    {
+        $usedClasses = [];
+        $srcPath = __DIR__ . '/TestClasses';
+
+        $service = new DeadClassesLocatorService($srcPath, '');
+
+        $deadClasses = $service->getDeadClassesFromUsedClasses($usedClasses);
+
+        $this->assertEquals([UsedClass::class, DeadClass::class], $deadClasses);
+    }
+
+    public function test_getDeadClassesFromUsedClasses_subsetUsedClasses(): void
+    {
+        $usedClasses = [UsedClass::class];
+        $srcPath = __DIR__ . '/TestClasses';
+
+        $service = new DeadClassesLocatorService($srcPath, '');
+
+        $deadClasses = $service->getDeadClassesFromUsedClasses($usedClasses);
+
+        $this->assertEquals([DeadClass::class], $deadClasses);
+    }
+
+    public function test_getDeadClassesFromUsedClasses_supersetUsedClasses(): void
+    {
+        $usedClasses = [UsedClass::class, DeadClass::class, 'SomeOtherClass'];
+        $srcPath = __DIR__ . '/TestClasses';
+
+        $service = new DeadClassesLocatorService($srcPath, '');
+
+        $deadClasses = $service->getDeadClassesFromUsedClasses($usedClasses);
+
+        $this->assertEquals([], $deadClasses);
+    }
+
+    public function test_getDeadClassesFromUsedClasses_someUsedClasses(): void
+    {
+        $usedClasses = [UsedClass::class, 'SomeOtherClass'];
+        $srcPath = __DIR__ . '/TestClasses';
+
+        $service = new DeadClassesLocatorService($srcPath, '');
+
+        $deadClasses = $service->getDeadClassesFromUsedClasses($usedClasses);
+
+        $this->assertEquals([DeadClass::class], $deadClasses);
+    }
 }
